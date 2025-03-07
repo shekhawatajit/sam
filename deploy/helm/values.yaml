@@ -4,16 +4,16 @@ description: A fullstack application with a React frontend and a Python backend.
 
 frontend:
   image:
-    repository: my-frontend
-    tag: latest
+    repository: ghcr.io/shekhawatajit/sambackend
+    tag: release
   service:
     type: ClusterIP
     port: 80
 
 backend:
   image:
-    repository: my-backend
-    tag: latest
+    repository: ghcr.io/shekhawatajit/samfrontend
+    tag: release
   service:
     type: ClusterIP
     port: 5000

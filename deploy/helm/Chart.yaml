@@ -1,6 +1,6 @@
 apiVersion: v2
 dependencies: []
-name: my-fullstack-app
+name: sam
 version: 0.1.0
 description: A fullstack application with a React frontend and a Python backend API.
 type: application
@@ -9,9 +9,8 @@ keywords:
   - kubernetes
   - react
   - python
-  - flask
 maintainers:
   - name: Ajit
     email: shekhawatajit@hotmail.com
 sources:
-  - https://github.com/your-repo/my-fullstack-app
+  - https://github.com/shekhawatajit/sam

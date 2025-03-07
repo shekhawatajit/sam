@@ -6,15 +6,16 @@ metadata:
 spec:
   destination:
     namespace: samns
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: 'https://github.com/shekhawatajit/sam.git'
     path: deploy/helm
+    repoURL: https://github.com/shekhawatajit/sam.git
     targetRevision: main
     helm:
       valueFiles:
         - values.yaml
-syncPolicy:
-  syncOptions:
+  syncPolicy:
+    syncOptions:
     - CreateNamespace=true
+    

@@ -1,0 +1,17 @@
+apiVersion: v2
+dependencies: []
+name: my-fullstack-app
+version: 0.1.0
+description: A fullstack application with a React frontend and a Python backend API.
+type: application
+keywords:
+  - helm
+  - kubernetes
+  - react
+  - python
+  - flask
+maintainers:
+  - name: Ajit
+    email: shekhawatajit@hotmail.com
+sources:
+  - https://github.com/your-repo/my-fullstack-app

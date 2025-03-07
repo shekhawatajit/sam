@@ -1,10 +1,27 @@
-from flask import Flask, jsonify
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from datetime import datetime
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.route('/welcome', methods=['GET'])
-def welcome():
-    return jsonify(message="Welcome to the API!")
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+@app.get("/")
+def read_root():
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return {"message": "Welcome to Anura API " + current_time}
+
+@app.get("/sum")
+def sum(a: int, b: int):
+    return {"result": a + b}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=5000)

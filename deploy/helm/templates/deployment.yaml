@@ -46,7 +46,7 @@ spec:
           image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 8080
           env:
             - name: REACT_APP_API_URL
               value: {{ .Values.backend.url }}

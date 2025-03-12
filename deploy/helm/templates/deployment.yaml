@@ -1,52 +1,65 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-backend
+  name: {{ .Release.Name }}
   labels:
-    app: {{ .Release.Name }}-backend
+    name: {{ .Chart.Name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-backend
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-backend
+        app: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/managed-by: helm
     spec:
       containers:
-        - name: backend
-          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 5000
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
           env:
-            - name: FLASK_ENV
-              value: "production"
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Release.Name }}-frontend
-  labels:
-    app: {{ .Release.Name }}-frontend
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: {{ .Release.Name }}-frontend
-  template:
-    metadata:
-      labels:
-        app: {{ .Release.Name }}-frontend
-    spec:
-      containers:
-        - name: frontend
-          image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
-          imagePullPolicy: Always
+            {{- if .Values.backendServiceName }}
+            - name: BACKEND_HOST
+              value: {{ .Values.backendServiceName }}
+            {{- end }}
+            {{- range $env := .Values.environments }}
+            - name: {{ $env.name }}
+              value: "{{ $env.value }}"
+            {{- end }}
+            {{- range $secret := .Values.secrets }}
+            - name: {{ $secret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secret.secretName }}
+                  key: {{ $secret.secretKey }}
+            {{- end }}
+          livenessProbe:
+            initialDelaySeconds: 30
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /
+              port: 80
+          readinessProbe:
+            initialDelaySeconds: 30
+            failureThreshold: 10
+            periodSeconds: 10
+            httpGet:
+              path: /
+              port: 80
           ports:
-            - containerPort: 8000
-          env:
-            - name: REACT_APP_API_URL
-              value: {{ .Values.backend.url }}
+            - name: {{ .Chart.Name }}
+              containerPort: 80

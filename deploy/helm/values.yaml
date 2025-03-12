@@ -1,27 +1,40 @@
-name: my-fullstack-app
+name: my-sample-app
 version: 0.1.0
 description: A fullstack application with a React frontend and a Python backend.
 
-frontend:
-  image:
-    repository: ghcr.io/shekhawatajit/samfrontend
-    tag: release
-  service:
-    type: ClusterIP
-    port: 8000
+# -- Image name and version
+image:
+  pullPolicy: IfNotPresent
+  repository: ghcr.io/shekhawatajit/samfrontend
+  tag: release
 
-backend:
-  image:
-    repository: ghcr.io/shekhawatajit/sambackend
-    tag: release
-  service:
-    type: ClusterIP
-    port: 5000
+# -- nginx port
+port: 3000
+
+# -- Upstream host
+backendServiceName:
+
+ingress:
+  # -- Enable ingress
+  enabled: true
+  # -- Ingress name
+  # @default -- .Release.Name
+  name:
+  # -- Domain
+  domain: romanow-alex.ru
+
+# -- Additional env variables
+environments: []
+
+# -- Additional secrets
+secrets: []
 
 resources:
-  limits:
-    cpu: "500m"
-    memory: "512Mi"
+  # -- Requested resources
   requests:
-    cpu: "250m"
-    memory: "256Mi"
+    cpu: 100m
+    memory: 128Mi
+  # -- Limited resources
+  limits:
+    cpu: 200m
+    memory: 128Mi

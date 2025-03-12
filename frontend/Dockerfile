@@ -22,8 +22,8 @@ FROM nginx:alpine
 # Copy the build files from the builder stage to the Nginx web directory
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 8000
-EXPOSE 8000
+# Expose port 3000
+EXPOSE 3000
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
